@@ -5,8 +5,6 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.Properties;
 
-import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -20,7 +18,6 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 public class SimpleProducer {
 
 	private static Producer<Integer, String> producer;
-	// private static Consumer<Integer, String> consumer;
 	private final static Properties properties = new Properties();
 
 	static {
@@ -32,18 +29,17 @@ public class SimpleProducer {
 		}
 
 		producer = new KafkaProducer<Integer, String>(properties);
-		// consumer = new KafkaConsumer<Integer, String>(properties);
 	}
 
 	public static void main(String[] args) throws InterruptedException {
 		String topic = "test";
 
-		for (int i = 0; i < 5; i++) {
-			String messageStr = i + ". Async Message sent at: " + new Date();
+		for (int i = 0; i < 120; i++) {
+			String messageStr = i + ". Message sent at: " + new Date();
 			send(topic, messageStr);
 		}
 		producer.close();
-
+		System.out.println("Message sent");
 	}
 
 	/**
@@ -57,7 +53,5 @@ public class SimpleProducer {
 	public static void send(final String topic, final String messageStr) {
 		ProducerRecord<Integer, String> data = new ProducerRecord<Integer, String>(topic, messageStr);
 		producer.send(data);
-		System.out.println("Message sent");
 	}
-
 }
